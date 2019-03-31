@@ -1,5 +1,5 @@
 [package]
-name = "convertTemperture"
+name = "convert_temperture"
 version = "0.1.0"
 authors = ["Takumi Karibe <takumi.k.5610@gmail.com>"]
 edition = "2018"
