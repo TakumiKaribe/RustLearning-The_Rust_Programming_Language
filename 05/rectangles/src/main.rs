@@ -3,7 +3,7 @@ fn main() {
     let height1 = 50;
 
     println!(
-        "The area of the rectabvle is {} square pixels.",
+        "The area of the rectangle is {} square pixels.",
         area(width1, height1)
     );
 }
