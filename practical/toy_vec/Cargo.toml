@@ -1,0 +1,7 @@
+[package]
+name = "toy_vec"
+version = "0.1.0"
+authors = ["takumi-karibe <takumi-karibe@navitime.co.jp>"]
+edition = "2018"
+
+[dependencies]
