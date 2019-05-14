@@ -46,6 +46,16 @@ impl<T: Default> ToyVec<T> {
         self.len += 1;
     }
 
+    fn pop(&mut self) -> Option<T> {
+        if self.len == 0 {
+            None
+        } else {
+            self.len -= 1;
+            let elem = std::mem::replace(&mut self.elements[self.len], Default::default());
+            Some(elem)
+        }
+    }
+
     pub fn get(&self, index: usize) -> Option<&T> {
         if index < self.len {
             Some(&self.elements[index])
@@ -62,14 +72,4 @@ impl<T: Default> ToyVec<T> {
     }
 
     fn grow(&mut self) {}
-
-    fn pop(&mut self) -> Option<T> {
-        if self.len == 0 {
-            None
-        } else {
-            self.len -= 1;
-            let elem = std::mem::replace(&mut self.elements[self.len], Default::default());
-            Some(elem)
-        }
-    }
 }
