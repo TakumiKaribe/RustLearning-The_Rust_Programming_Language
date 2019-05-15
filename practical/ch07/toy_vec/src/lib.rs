@@ -6,6 +6,12 @@ mod tests {
     }
 }
 
+pub struct Iter<'vec, T> {
+    elements: &'vec Box<[T]>,
+    len: usize,
+    pos: usize,
+}
+
 pub struct ToyVec<T> {
     elements: Box<[T]>,
     len: usize,
@@ -80,6 +86,28 @@ impl<T: Default> ToyVec<T> {
             for (i, elem) in old_elements.into_vec().into_iter().enumerate() {
                 self.elements[i] = elem;
             }
+        }
+    }
+
+    pub fn iter<'vec>(&'vec self) -> Iter<'vec, T> {
+        Iter {
+            elements: &self.elements,
+            len: self.len,
+            pos: 0,
+        }
+    }
+}
+
+impl<'vec, T> Iterator for Iter<'vec, T> {
+    type Item = &'vec T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.pos >= self.len {
+            None
+        } else {
+            let res = Some(&self.elements[self.pos]);
+            self.pos += 1;
+            res
         }
     }
 }
