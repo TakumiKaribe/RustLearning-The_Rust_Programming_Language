@@ -160,6 +160,18 @@ fn recognize_many(input: &[u8], mut pos: usize, mut f: impl FnMut(u8) -> bool) -
     pos
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+enum AstKind {
+    Num(u64),
+    UniOp { op: UniOp, e: Box<Ast> },
+    BinOp { op: BinOp, l: Box<Ast>, r: Box<Ast> },
+}
+
+type Ast = Annot<AstKind>;
+
+impl Ast {}
+
+
 use std::io;
 
 fn prompt(s: &str) -> io::Result<()> {
