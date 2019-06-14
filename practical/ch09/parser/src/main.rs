@@ -141,10 +141,7 @@ fn lex_number(input: &[u8], pos: usize) -> Result<(Token, usize), LexError> {
 
     let start = pos;
     let end = recognize_many(input, start, |b| b"1234567890".contains(&b));
-    let n = from_utf8(&input[start..end])
-        .unwrap()
-        .parse()
-        .unwrap();
+    let n = from_utf8(&input[start..end]).unwrap().parse().unwrap();
     Ok((Token::number(n, Loc(start, end)), end))
 }
 
@@ -169,8 +166,83 @@ enum AstKind {
 
 type Ast = Annot<AstKind>;
 
-impl Ast {}
+impl Ast {
+    fn num(n: u64, loc: Loc) -> Self {
+        Self::new(AstKind::Num(n), loc)
+    }
 
+    fn uniop(op: UniOp, e: Ast, loc: Loc) -> Self {
+        Self::new(AstKind::UniOp { op, e: Box::new(e) }, loc)
+    }
+
+    fn binop(op: BinOp, l: Ast, r: Ast, loc: Loc) -> Self {
+        Self::new(
+            AstKind::BinOp {
+                op,
+                l: Box::new(l),
+                r: Box::new(r),
+            },
+            loc,
+        )
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+enum UniOpKind {
+    Plus,
+    Minus,
+}
+
+type UniOp = Annot<UniOpKind>;
+
+impl UniOp {
+    fn plus(loc: Loc) -> Self {
+        Self::new(UniOpKind::Plus, loc)
+    }
+
+    fn minus(loc: Loc) -> Self {
+        Self::new(UniOpKind::Minus, loc)
+    }
+}
+
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+enum BinOpKind {
+    Add,
+    Sub,
+    Mult,
+    Div,
+}
+
+type BinOp = Annot<BinOpKind>;
+
+impl BinOp {
+    fn add(loc: Loc) -> Self {
+        Self::new(BinOpKind::Add, loc)
+    }
+
+    fn sub(loc: Loc) -> Self {
+        Self::new(BinOpKind::Sub, loc)
+    }
+
+    fn mult(loc: Loc) -> Self {
+        Self::new(BinOpKind::Mult, loc)
+    }
+
+    fn div(loc: Loc) -> Self {
+        Self::new(BinOpKind::Div, loc)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+enum ParseError {
+    UnexpectedToken(Token),
+    NotExpresstion(Token),
+    NotOperator(Token),
+    UncloseOpenParen(Token),
+    RedundantExpressin(Token),
+    Eof,
+}
 
 use std::io;
 
