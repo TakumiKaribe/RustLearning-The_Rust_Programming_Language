@@ -42,7 +42,7 @@ fn main() {
     assert_eq!(array3.get(1), Some(&1));
     assert_eq!(array3.get(2), None);
 
-    let array4 = ['a', 50];
+    let array4 = ['a'; 50];
 
     for ch in array4.iter() {
         print!("{}", *ch);
