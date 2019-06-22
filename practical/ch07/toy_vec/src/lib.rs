@@ -1,17 +1,3 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
-
-pub struct Iter<'vec, T> {
-    elements: &'vec Box<[T]>,
-    len: usize,
-    pos: usize,
-}
-
 pub struct ToyVec<T> {
     elements: Box<[T]>,
     len: usize,
@@ -52,16 +38,6 @@ impl<T: Default> ToyVec<T> {
         self.len += 1;
     }
 
-    fn pop(&mut self) -> Option<T> {
-        if self.len == 0 {
-            None
-        } else {
-            self.len -= 1;
-            let elem = std::mem::replace(&mut self.elements[self.len], Default::default());
-            Some(elem)
-        }
-    }
-
     pub fn get(&self, index: usize) -> Option<&T> {
         if index < self.len {
             Some(&self.elements[index])
@@ -74,6 +50,16 @@ impl<T: Default> ToyVec<T> {
         match self.get(index) {
             Some(v) => v,
             None => default,
+        }
+    }
+
+    pub fn pop(&mut self) -> Option<T> {
+        if self.len == 0 {
+            None
+        } else {
+            self.len -= 1;
+            let elem = std::mem::replace(&mut self.elements[self.len], Default::default());
+            Some(elem)
         }
     }
 
@@ -98,8 +84,15 @@ impl<T: Default> ToyVec<T> {
     }
 }
 
+pub struct Iter<'vec, T> {
+    elements: &'vec Box<[T]>,
+    len: usize,
+    pos: usize,
+}
+
 impl<'vec, T> Iterator for Iter<'vec, T> {
     type Item = &'vec T;
+    type IntoIte = Iter<'vec, T>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.pos >= self.len {
@@ -110,11 +103,6 @@ impl<'vec, T> Iterator for Iter<'vec, T> {
             res
         }
     }
-}
-
-impl<'vec, T:Default> IntoIterator for &'vec ToyVec<T> {
-    type Item = &'vec T;
-    type IntoIter = Iter<'vec, T>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
