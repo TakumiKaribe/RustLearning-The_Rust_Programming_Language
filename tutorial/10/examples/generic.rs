@@ -17,7 +17,7 @@ impl Point<f32> {
 
 struct PointTU<T, U> {
     x: T,
-    y: Y,
+    y: U,
 }
 
 impl<T, U> Point<T, U> {
@@ -35,7 +35,7 @@ fn main() {
 
     // let wont_work = Point { x: 5, y: 4.0 };
 
-    let both_integer = PointTU { x: 5, y:10 };
+    let both_integer = PointTU { x: 5, y: 10 };
     let both_float = PointTU { x: 1.0, y: 4.0 };
     let integer_and_float = PointTU { x: 5, y: 4.0 };
 
